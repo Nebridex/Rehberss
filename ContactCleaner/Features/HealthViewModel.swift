@@ -48,11 +48,14 @@ final class HealthViewModel: ObservableObject {
                 if selectedMasterContainerID == nil, let defaultID = payload.defaultContainerIdentifier, knownIDs.contains(defaultID) { selectedMasterContainerID = defaultID }
                 let detectedICloudID = try? maintenance.preferredICloudContainerIdentifier(from: payload.rawContacts)
                 let report = HealthReport(generatedAt: Date(), rawContactCount: payload.rawContacts.count, unifiedContactCount: payload.unifiedCount, estimatedUniquePeople: max(0, payload.rawContacts.count - reduction), sourceCounts: sourceCounts, definiteClusters: definite, highClusters: high, reviewClusters: review, samePhoneGroupCount: analysis.samePhoneGroups, sameEmailGroupCount: analysis.sameEmailGroups, unnamedCount: analysis.unnamedCount, notesAccessAvailable: payload.notesAccessAvailable, preferredICloudContainerID: detectedICloudID, defaultContainerID: payload.defaultContainerIdentifier)
-                currentReport = report; operationHistory = maintenance.operationHistory(); maintenanceState = .idle; state = .loaded(report)
+                currentReport = report
+                operationHistory = maintenance.operationHistory()
+                state = .loaded(report)
             } catch { state = .failed(error.localizedDescription) }
         }
     }
 
+    func clearMaintenanceState() { maintenanceState = .idle }
     func selectMasterContainer(_ id: String) { selectedMasterContainerID = id }
     func preview(for cluster: PersonCluster) -> MergePreview? { guard let id = selectedMasterContainerID else { return nil }; return maintenance.mergePreview(for: cluster, preferredContainerID: id) }
 
@@ -61,7 +64,18 @@ final class HealthViewModel: ObservableObject {
     func merge(_ cluster: PersonCluster, confirmScalarConflicts: Bool) {
         guard let containerID = selectedMasterContainerID else { maintenanceState = .failed("Önce Ana Rehber seç."); return }
         let override = allowWithoutNotesEntitlement
-        Task { maintenanceState = .working("\(cluster.title) birleştiriliyor"); do { let _: Void = try await runOffMain { [maintenance] in _ = try maintenance.merge(cluster: cluster, preferredContainerID: containerID, allowWithoutNotesEntitlement: override, confirmScalarConflicts: confirmScalarConflicts) }; maintenanceState = .success("Birleştirme tamamlandı ve doğrulandı."); scan() } catch { maintenanceState = .failed(error.localizedDescription) } }
+        Task {
+            maintenanceState = .working("\(cluster.title) birleştiriliyor")
+            do {
+                let _: Void = try await runOffMain { [maintenance] in
+                    _ = try maintenance.merge(cluster: cluster, preferredContainerID: containerID, allowWithoutNotesEntitlement: override, confirmScalarConflicts: confirmScalarConflicts)
+                }
+                operationHistory = maintenance.operationHistory()
+                maintenanceState = .success("Birleştirme tamamlandı ve doğrulandı. Rehberi kontrol ettikten sonra Yeniden Tara ile listeyi güncelleyebilirsin.")
+            } catch {
+                maintenanceState = .failed(error.localizedDescription)
+            }
+        }
     }
 
     func bulkMergeDefinite() {
