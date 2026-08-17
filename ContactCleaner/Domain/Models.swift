@@ -1,7 +1,7 @@
 import Foundation
 
-struct ContactSource: Identifiable, Hashable, Codable {
-    enum Kind: String, Codable, CaseIterable {
+struct ContactSource: Identifiable, Hashable, Codable, Sendable {
+    enum Kind: String, Codable, CaseIterable, Sendable {
         case iCloud
         case gmail
         case exchange
@@ -15,19 +15,19 @@ struct ContactSource: Identifiable, Hashable, Codable {
     let kind: Kind
 }
 
-struct LabeledString: Hashable, Codable, Identifiable {
+struct LabeledString: Hashable, Codable, Identifiable, Sendable {
     var id: String { "\(label)|\(value)" }
     let label: String
     let value: String
 }
 
-struct ContactGroupSnapshot: Hashable, Codable, Identifiable {
+struct ContactGroupSnapshot: Hashable, Codable, Identifiable, Sendable {
     let id: String
     let name: String
     let sourceIdentifier: String
 }
 
-struct PostalAddressSnapshot: Hashable, Codable, Identifiable {
+struct PostalAddressSnapshot: Hashable, Codable, Identifiable, Sendable {
     var id: String { "\(label)|\(street)|\(city)|\(state)|\(postalCode)|\(country)" }
     let label: String
     let street: String
@@ -40,14 +40,14 @@ struct PostalAddressSnapshot: Hashable, Codable, Identifiable {
     let isoCountryCode: String
 }
 
-struct LabeledDateSnapshot: Hashable, Codable, Identifiable {
+struct LabeledDateSnapshot: Hashable, Codable, Identifiable, Sendable {
     var id: String { "\(label)|\(dateKey)" }
     let label: String
     let components: DateComponents
     var dateKey: String { "\(components.era ?? -1)|\(components.year ?? -1)|\(components.month ?? -1)|\(components.day ?? -1)" }
 }
 
-struct SocialProfileSnapshot: Hashable, Codable, Identifiable {
+struct SocialProfileSnapshot: Hashable, Codable, Identifiable, Sendable {
     var id: String { "\(label)|\(service)|\(username)|\(urlString)" }
     let label: String
     let urlString: String
@@ -56,14 +56,14 @@ struct SocialProfileSnapshot: Hashable, Codable, Identifiable {
     let service: String
 }
 
-struct InstantMessageSnapshot: Hashable, Codable, Identifiable {
+struct InstantMessageSnapshot: Hashable, Codable, Identifiable, Sendable {
     var id: String { "\(label)|\(service)|\(username)" }
     let label: String
     let username: String
     let service: String
 }
 
-struct ContactSnapshot: Identifiable, Hashable, Codable {
+struct ContactSnapshot: Identifiable, Hashable, Codable, Sendable {
     let id: String
     let source: ContactSource
 
@@ -107,7 +107,7 @@ struct ContactSnapshot: Identifiable, Hashable, Codable {
     }
 }
 
-enum DuplicateConfidence: String, Codable, CaseIterable {
+enum DuplicateConfidence: String, Codable, CaseIterable, Sendable {
     case definite = "Kesin duplicate"
     case high = "Yüksek olasılıklı"
     case review = "İncelenmeli"
@@ -121,7 +121,7 @@ enum DuplicateConfidence: String, Codable, CaseIterable {
     }
 }
 
-enum MatchEvidenceKind: String, Codable {
+enum MatchEvidenceKind: String, Codable, Sendable {
     case exactPhone
     case exactEmail
     case exactName
@@ -132,13 +132,13 @@ enum MatchEvidenceKind: String, Codable {
     case birthdayConflict
 }
 
-struct MatchEvidence: Hashable, Codable, Identifiable {
+struct MatchEvidence: Hashable, Codable, Identifiable, Sendable {
     var id: String { "\(kind.rawValue)|\(detail)" }
     let kind: MatchEvidenceKind
     let detail: String
 }
 
-struct DuplicatePair: Hashable, Codable {
+struct DuplicatePair: Hashable, Codable, Sendable {
     let leftID: String
     let rightID: String
     let confidence: DuplicateConfidence
@@ -147,7 +147,7 @@ struct DuplicatePair: Hashable, Codable {
     let hasHardConflict: Bool
 }
 
-struct PersonCluster: Identifiable, Hashable, Codable {
+struct PersonCluster: Identifiable, Hashable, Codable, Sendable {
     let id: String
     let contacts: [ContactSnapshot]
     let confidence: DuplicateConfidence
@@ -157,13 +157,13 @@ struct PersonCluster: Identifiable, Hashable, Codable {
     var title: String { contacts.first?.displayName ?? "Eşleşme" }
 }
 
-struct SourceCount: Identifiable, Hashable, Codable {
+struct SourceCount: Identifiable, Hashable, Codable, Sendable {
     var id: String { "\(source.id)-\(count)" }
     let source: ContactSource
     let count: Int
 }
 
-struct HealthReport: Codable {
+struct HealthReport: Codable, Sendable {
     let generatedAt: Date
     let rawContactCount: Int
     let unifiedContactCount: Int
