@@ -1,12 +1,12 @@
 import Foundation
 
 struct PhoneNormalizer {
-    static func normalize(_ raw: String, defaultRegion: String = "TR") -> String? {
+    static func normalize(_ raw: String, defaultRegion: String = "TR") -> String {
         let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return nil }
+        guard !trimmed.isEmpty else { return "" }
 
         var digits = trimmed.filter(\.isNumber)
-        guard !digits.isEmpty else { return nil }
+        guard !digits.isEmpty else { return "" }
 
         if digits.hasPrefix("00") {
             digits.removeFirst(2)
@@ -35,9 +35,8 @@ struct PhoneNormalizer {
 }
 
 struct EmailNormalizer {
-    static func normalize(_ raw: String) -> String? {
-        let value = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        return value.isEmpty ? nil : value
+    static func normalize(_ raw: String) -> String {
+        raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
     }
 }
 
