@@ -18,16 +18,13 @@ struct HealthDashboardView: View {
             Section("Ana Rehber") {
                 Picker("Birleştirme hedefi", selection: Binding(get: { viewModel.selectedMasterContainerID ?? "" }, set: { if !$0.isEmpty { viewModel.selectMasterContainer($0) } })) {
                     Text("Seçilmedi").tag("")
-                    ForEach(report.sourceCounts) { item in
-                        Text(masterLabel(item)).tag(item.source.id)
-                    }
+                    ForEach(report.sourceCounts) { item in Text(masterLabel(item)).tag(item.source.id) }
                 }
+                .disabled(viewModel.isBulkMerging)
                 if let id = viewModel.selectedMasterContainerID, let selected = report.sourceCounts.first(where: { $0.source.id == id }) {
-                    Label("Tüm merge ve taşıma işlemleri \"\(selected.source.name)\" kaynağında master kayıt oluşturacak.", systemImage: "checkmark.shield")
-                        .font(.footnote)
+                    Label("Tüm merge ve taşıma işlemleri \"\(selected.source.name)\" kaynağında master kayıt oluşturacak.", systemImage: "checkmark.shield").font(.footnote)
                 } else {
-                    Label("Merge kapalı. Önce hangi rehberin ana kaynak olacağını seç.", systemImage: "exclamationmark.triangle")
-                        .foregroundStyle(.orange)
+                    Label("Merge kapalı. Önce hangi rehberin ana kaynak olacağını seç.", systemImage: "exclamationmark.triangle").foregroundStyle(.orange)
                 }
                 Text("Varsayılan iOS rehberi otomatik önerilir; isimden iCloud tahmini yapılmaz. Seçimi değiştirebilirsin.").font(.footnote).foregroundStyle(.secondary)
             }
@@ -36,29 +33,68 @@ struct HealthDashboardView: View {
                 Label(report.notesAccessAvailable ? "Contacts Notes erişimi hazır" : "Contacts Notes erişimi yok", systemImage: report.notesAccessAvailable ? "checkmark.shield.fill" : "exclamationmark.shield.fill")
                 if !report.notesAccessAvailable {
                     Toggle("Notes koruması olmadan devam et", isOn: Binding(get: { viewModel.allowWithoutNotesEntitlement }, set: { value in if value { showNotesOverrideConfirmation = true } else { viewModel.allowWithoutNotesEntitlement = false } }))
+                        .disabled(viewModel.isBulkMerging)
                         .confirmationDialog("Notes alanı okunamayabilir", isPresented: $showNotesOverrideConfirmation, titleVisibility: .visible) { Button("Riski kabul et", role: .destructive) { viewModel.allowWithoutNotesEntitlement = true }; Button("Vazgeç", role: .cancel) { viewModel.allowWithoutNotesEntitlement = false } } message: { Text("Apple Notes entitlement yokken contact notlarının varlığını doğrulayamıyoruz.") }
                 }
-                Button { viewModel.createBackup() } label: { Label("Tam Rehber Yedeği Oluştur", systemImage: "externaldrive.badge.timemachine") }
+                Button { viewModel.createBackup() } label: { Label("Tam Rehber Yedeği Oluştur", systemImage: "externaldrive.badge.timemachine") }.disabled(viewModel.isBulkMerging)
             }
 
             Section("Duplicate Analizi") {
-                NavigationLink { DuplicateListView(title: "Kesin duplicate", clusters: report.definiteClusters, viewModel: viewModel) } label: { MetricRow(title: "Kesin duplicate", value: report.definiteClusters.count) }
-                NavigationLink { DuplicateListView(title: "Yüksek olasılıklı", clusters: report.highClusters, viewModel: viewModel) } label: { MetricRow(title: "Yüksek olasılıklı", value: report.highClusters.count) }
-                NavigationLink { DuplicateListView(title: "İncelenmeli", clusters: report.reviewClusters, viewModel: viewModel) } label: { MetricRow(title: "İncelenmeli", value: report.reviewClusters.count) }
+                NavigationLink { DuplicateListView(title: "Kesin duplicate", clusters: report.definiteClusters, viewModel: viewModel) } label: { MetricRow(title: "Kesin duplicate", value: report.definiteClusters.count) }.disabled(viewModel.isBulkMerging)
+                NavigationLink { DuplicateListView(title: "Yüksek olasılıklı", clusters: report.highClusters, viewModel: viewModel) } label: { MetricRow(title: "Yüksek olasılıklı", value: report.highClusters.count) }.disabled(viewModel.isBulkMerging)
+                NavigationLink { DuplicateListView(title: "İncelenmeli", clusters: report.reviewClusters, viewModel: viewModel) } label: { MetricRow(title: "İncelenmeli", value: report.reviewClusters.count) }.disabled(viewModel.isBulkMerging)
                 MetricRow(title: "Aynı numara grubu", value: report.samePhoneGroupCount); MetricRow(title: "Aynı e-posta grubu", value: report.sameEmailGroupCount); MetricRow(title: "İsimsiz kayıt", value: report.unnamedCount)
             }
 
+            if viewModel.isBulkMerging || viewModel.bulkProgress != nil {
+                Section("Toplu Birleştirme Durumu") {
+                    if let progress = viewModel.bulkProgress {
+                        VStack(alignment: .leading, spacing: 10) {
+                            HStack { Text("\(progress.current) / \(progress.total)").fontWeight(.semibold); Spacer(); Text(progress.contactName).lineLimit(1).foregroundStyle(.secondary) }
+                            ProgressView(value: progress.fraction)
+                        }
+                    } else {
+                        HStack { ProgressView(); Text("Tam rehber yedeği hazırlanıyor…") }
+                    }
+                    Button("Güvenli Şekilde Durdur", role: .destructive) { viewModel.cancelBulkMerge() }
+                    Text("İptal, o anda işlenen kişi doğrulandıktan veya geri sarıldıktan sonra uygulanır. Yarım merge bırakılmaz.").font(.footnote).foregroundStyle(.secondary)
+                }
+            }
+
             Section("Toplu İşlemler") {
-                Button { showBulkConfirmation = true } label: { Label("Güvenli Kesin Duplicate'leri Birleştir", systemImage: "person.2.badge.checkmark") }
-                    .disabled(report.definiteClusters.isEmpty || viewModel.selectedMasterContainerID == nil || (!report.notesAccessAvailable && !viewModel.allowWithoutNotesEntitlement))
-                    .confirmationDialog("Kesin duplicate'ler toplu birleştirilsin mi?", isPresented: $showBulkConfirmation, titleVisibility: .visible) { Button("Yedekle ve Birleştir", role: .destructive) { viewModel.bulkMergeDefinite() }; Button("Vazgeç", role: .cancel) {} } message: { Text("Yalnızca kesin ve güvenli kümeler işlenir. Önce tüm rehberin yedeği alınır.") }
+                let eligible = viewModel.safeBulkEligibleCount()
+                Button { showBulkConfirmation = true } label: { Label("Güvenli Kesin Duplicate'leri Birleştir (\(eligible))", systemImage: "person.2.badge.checkmark") }
+                    .disabled(viewModel.isBulkMerging || eligible == 0 || viewModel.selectedMasterContainerID == nil || (!report.notesAccessAvailable && !viewModel.allowWithoutNotesEntitlement))
+                    .confirmationDialog("\(eligible) güvenli duplicate grubu toplu birleştirilsin mi?", isPresented: $showBulkConfirmation, titleVisibility: .visible) {
+                        Button("Tam Yedek Al ve Başlat", role: .destructive) { viewModel.bulkMergeDefinite() }
+                        Button("Vazgeç", role: .cancel) {}
+                    } message: { Text("Riskli veya alan çakışması olan gruplar otomatik atlanır. Her grup ayrı doğrulanır; hata alan grup diğerlerini durdurmaz. İşlem sırasında durdurabilirsin.") }
+
                 Button { showConsolidationConfirmation = true } label: { Label("Benzersiz Kayıtları Ana Rehbere Taşı", systemImage: "icloud.and.arrow.up") }
-                    .disabled(viewModel.selectedMasterContainerID == nil || (!report.notesAccessAvailable && !viewModel.allowWithoutNotesEntitlement))
+                    .disabled(viewModel.isBulkMerging || viewModel.selectedMasterContainerID == nil || (!report.notesAccessAvailable && !viewModel.allowWithoutNotesEntitlement))
                     .confirmationDialog("Rehber seçilen ana kaynakta konsolide edilsin mi?", isPresented: $showConsolidationConfirmation, titleVisibility: .visible) { Button("Yedekle ve Taşı", role: .destructive) { viewModel.consolidateUniqueContactsToICloud() }; Button("Vazgeç", role: .cancel) {} } message: { Text("Duplicate kümeleri atlanır. Benzersiz kayıtlar seçtiğin ana rehbere kopyalanır, doğrulanır ve ancak sonra eski kaynaktan silinir.") }
             }
 
-            if !viewModel.operationHistory.isEmpty { Section("İşlem Geçmişi / Undo") { ForEach(viewModel.operationHistory.prefix(20)) { operation in HStack { VStack(alignment: .leading, spacing: 3) { Text(operation.kind == .merge ? "Merge" : "Ana rehbere taşıma").font(.subheadline.weight(.semibold)); Text(operation.createdAt.formatted(date: .abbreviated, time: .shortened)).font(.caption).foregroundStyle(.secondary) }; Spacer(); Button("Geri Al") { viewModel.undo(operation) }.buttonStyle(.bordered) } } } }
-            Section { Button("Yeniden Tara", action: viewModel.scan) } footer: { Text("Kaynak kayıt yalnızca master kayıt kaydedilip tekrar okunarak doğrulandıktan sonra silinir.") }
+            if !viewModel.bulkFailureMessages.isEmpty {
+                Section("Toplu İşlemde Atlananlar") {
+                    ForEach(Array(viewModel.bulkFailureMessages.enumerated()), id: \.offset) { _, message in Text(message).font(.footnote).foregroundStyle(.secondary) }
+                    if viewModel.bulkFailureMessages.count >= 20 { Text("İlk 20 hata gösteriliyor.").font(.caption).foregroundStyle(.secondary) }
+                }
+            }
+
+            if !viewModel.operationHistory.isEmpty {
+                Section("İşlem Geçmişi / Undo") {
+                    ForEach(viewModel.operationHistory.prefix(20)) { operation in
+                        HStack {
+                            VStack(alignment: .leading, spacing: 3) { Text(operation.kind == .merge ? "Merge" : "Ana rehbere taşıma").font(.subheadline.weight(.semibold)); Text(operation.createdAt.formatted(date: .abbreviated, time: .shortened)).font(.caption).foregroundStyle(.secondary) }
+                            Spacer()
+                            Button("Geri Al") { viewModel.undo(operation) }.buttonStyle(.bordered).disabled(viewModel.isBulkMerging)
+                        }
+                    }
+                }
+            }
+
+            Section { Button("Yeniden Tara", action: viewModel.scan).disabled(viewModel.isBulkMerging) } footer: { Text("Kaynak kayıt yalnızca master kayıt kaydedilip tekrar okunarak doğrulandıktan sonra silinir.") }
         }
     }
 
