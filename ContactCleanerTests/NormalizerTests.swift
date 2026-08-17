@@ -10,7 +10,7 @@ final class NormalizerTests: XCTestCase {
             "0090 532 123 45 67",
             "90 532 123 45 67"
         ]
-        XCTAssertEqual(Set(values.compactMap(PhoneNormalizer.normalize)), ["+905321234567"])
+        XCTAssertEqual(Set(values.map { PhoneNormalizer.normalize($0) }), ["+905321234567"])
     }
 
     func testTurkishNamesNormalize() {
