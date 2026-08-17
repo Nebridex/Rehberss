@@ -178,7 +178,3 @@ struct HealthReport: Codable, Sendable {
     let notesAccessAvailable: Bool
     let preferredICloudContainerID: String?
 }
-
-extension ContactMaintenanceService: @unchecked Sendable {}
-extension ContactMaintenanceService.OperationKind: Sendable {}
-extension ContactMaintenanceService.OperationRecord: Sendable {}
