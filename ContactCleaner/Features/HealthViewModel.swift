@@ -140,8 +140,12 @@ final class HealthViewModel: ObservableObject {
                 bulkFailureMessages = summary.failureMessages
                 isBulkMerging = false
                 bulkProgress = nil
+
                 if summary.cancelled {
                     maintenanceState = .success("Toplu işlem durduruldu. \(summary.successCount) kişi birleştirildi, \(summary.failedCount) hata oldu. Tamamlanan işlemler Undo ile geri alınabilir.")
+                } else if summary.eligibleCount > 0 && summary.successCount == 0 {
+                    let firstReason = summary.failureMessages.first ?? "Contacts işlemi kaynak kayıtları kabul etmedi."
+                    maintenanceState = .failed("Toplu merge uygulanmadı: 0/\(summary.eligibleCount) başarılı. İlk hata: \(firstReason)")
                 } else {
                     maintenanceState = .success("Toplu işlem tamamlandı: \(summary.successCount)/\(summary.eligibleCount) güvenli grup birleştirildi, \(summary.failedCount) grup atlandı.")
                 }
