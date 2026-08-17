@@ -8,6 +8,8 @@ final class ContactScanService: @unchecked Sendable {
         let rawContacts: [ContactSnapshot]
         let unifiedCount: Int
         let notesAccessAvailable: Bool
+        let sources: [ContactSource]
+        let defaultContainerIdentifier: String?
     }
 
     func authorizationStatus() -> CNAuthorizationStatus { CNContactStore.authorizationStatus(for: .contacts) }
@@ -27,6 +29,7 @@ final class ContactScanService: @unchecked Sendable {
                 do {
                     progress("Kaynak hesaplar bulunuyor")
                     let sources = try self.fetchSources(store: store)
+                    let defaultContainerID = store.defaultContainerIdentifier()
                     let notesAccess = self.probeNotesAccess(store: store)
                     progress("Liste ve grup üyelikleri okunuyor")
                     let groupMap = try self.fetchGroupMemberships(store: store, sources: sources)
@@ -37,7 +40,7 @@ final class ContactScanService: @unchecked Sendable {
                     }
                     progress("iOS unified kişi görünümü sayılıyor")
                     let unifiedCount = try self.fetchUnifiedCount(store: store)
-                    continuation.resume(returning: ScanPayload(rawContacts: raw, unifiedCount: unifiedCount, notesAccessAvailable: notesAccess))
+                    continuation.resume(returning: ScanPayload(rawContacts: raw, unifiedCount: unifiedCount, notesAccessAvailable: notesAccess, sources: sources, defaultContainerIdentifier: defaultContainerID))
                 } catch { continuation.resume(throwing: error) }
             }
         }
