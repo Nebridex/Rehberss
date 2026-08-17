@@ -1,7 +1,7 @@
-import Contacts
+@preconcurrency import Contacts
 import Foundation
 
-final class ContactScanService {
+final class ContactScanService: @unchecked Sendable {
     private let store = CNContactStore()
 
     struct ScanPayload {
