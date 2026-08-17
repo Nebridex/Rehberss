@@ -40,7 +40,6 @@ final class ContactScanService {
                         raw.append(contentsOf: try self.fetchContacts(
                             in: source,
                             store: store,
-                            unifyResults: false,
                             groupMap: groupMap,
                             includeNote: notesAccess
                         ))
@@ -96,8 +95,8 @@ final class ContactScanService {
         }
     }
 
-    private func fetchGroupMemberships(store: CNContactStore, sources: [ContactSource]) throws -> [String: [String]] {
-        var result: [String: [String]] = [:]
+    private func fetchGroupMemberships(store: CNContactStore, sources: [ContactSource]) throws -> [String: [ContactGroupSnapshot]] {
+        var result: [String: [ContactGroupSnapshot]] = [:]
         for source in sources {
             let groups = try store.groups(matching: CNGroup.predicateForGroupsInContainer(withIdentifier: source.id))
             for group in groups {
@@ -105,7 +104,9 @@ final class ContactScanService {
                 request.unifyResults = false
                 request.predicate = CNContact.predicateForContactsInGroup(withIdentifier: group.identifier)
                 try store.enumerateContacts(with: request) { contact, _ in
-                    result[contact.identifier, default: []].append(group.identifier)
+                    result[contact.identifier, default: []].append(
+                        ContactGroupSnapshot(id: group.identifier, name: group.name, sourceIdentifier: source.id)
+                    )
                 }
             }
         }
@@ -115,12 +116,11 @@ final class ContactScanService {
     private func fetchContacts(
         in source: ContactSource,
         store: CNContactStore,
-        unifyResults: Bool,
-        groupMap: [String: [String]],
+        groupMap: [String: [ContactGroupSnapshot]],
         includeNote: Bool
     ) throws -> [ContactSnapshot] {
         let request = CNContactFetchRequest(keysToFetch: Self.readKeys(includeNote: includeNote))
-        request.unifyResults = unifyResults
+        request.unifyResults = false
         request.sortOrder = .none
         request.predicate = CNContact.predicateForContactsInContainer(withIdentifier: source.id)
 
@@ -173,7 +173,7 @@ final class ContactScanService {
         return keys
     }
 
-    static func snapshot(_ contact: CNContact, source: ContactSource, groups: [String], includeNote: Bool) -> ContactSnapshot {
+    static func snapshot(_ contact: CNContact, source: ContactSource, groups: [ContactGroupSnapshot], includeNote: Bool) -> ContactSnapshot {
         ContactSnapshot(
             id: contact.identifier,
             source: source,
@@ -224,7 +224,7 @@ final class ContactScanService {
             nonGregorianBirthday: contact.nonGregorianBirthday,
             imageData: contact.imageData,
             note: includeNote ? contact.note : nil,
-            groupIdentifiers: groups
+            groups: groups
         )
     }
 }
