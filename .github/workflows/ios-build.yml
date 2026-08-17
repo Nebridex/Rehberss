@@ -8,6 +8,7 @@ on:
       - 'ContactCleaner/**'
       - 'ContactCleanerTests/**'
       - 'ContactCleaner.xcodeproj/**'
+      - '.github/workflows/ios-build.yml'
 
 concurrency:
   group: ios-compile-${{ github.ref }}
@@ -27,6 +28,16 @@ jobs:
           xcodebuild \
             -project ContactCleaner.xcodeproj \
             -target ContactCleaner \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            CODE_SIGNING_ALLOWED=NO \
+            build | xcpretty
+      - name: Compile test target for iOS Simulator
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project ContactCleaner.xcodeproj \
+            -target ContactCleanerTests \
             -configuration Debug \
             -sdk iphonesimulator \
             CODE_SIGNING_ALLOWED=NO \
