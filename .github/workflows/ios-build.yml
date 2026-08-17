@@ -31,6 +31,7 @@ jobs:
             -configuration Debug \
             -sdk iphonesimulator \
             CODE_SIGNING_ALLOWED=NO \
+            ENABLE_TESTABILITY=YES \
             build | xcpretty
       - name: Compile test target for iOS Simulator
         run: |
@@ -41,4 +42,5 @@ jobs:
             -configuration Debug \
             -sdk iphonesimulator \
             CODE_SIGNING_ALLOWED=NO \
+            ENABLE_TESTABILITY=YES \
             build | xcpretty
