@@ -1,0 +1,1 @@
+Icon asset refresh tracked in repository history.
