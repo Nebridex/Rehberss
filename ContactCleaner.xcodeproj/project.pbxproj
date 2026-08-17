@@ -18,6 +18,10 @@
 		A1000000000000000000000A /* DuplicateDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000000000A /* DuplicateDetailView.swift */; };
 		A1000000000000000000000B /* NormalizerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000000000C /* NormalizerTests.swift */; };
 		A1000000000000000000000C /* ContactMaintenanceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000000000F /* ContactMaintenanceService.swift */; };
+		A1000000000000000000000D /* ContactMaintenanceBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000010 /* ContactMaintenanceBackup.swift */; };
+		A1000000000000000000000E /* ContactMaintenanceFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000011 /* ContactMaintenanceFields.swift */; };
+		A1000000000000000000000F /* ContactMaintenanceMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000012 /* ContactMaintenanceMerge.swift */; };
+		A10000000000000000000010 /* ContactMaintenanceVerification.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000013 /* ContactMaintenanceVerification.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +50,10 @@
 		B1000000000000000000000D /* ContactCleaner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ContactCleaner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1000000000000000000000E /* ContactCleanerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ContactCleanerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1000000000000000000000F /* ContactMaintenanceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMaintenanceService.swift; sourceTree = "<group>"; };
+		B10000000000000000000010 /* ContactMaintenanceBackup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMaintenanceBackup.swift; sourceTree = "<group>"; };
+		B10000000000000000000011 /* ContactMaintenanceFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMaintenanceFields.swift; sourceTree = "<group>"; };
+		B10000000000000000000012 /* ContactMaintenanceMerge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMaintenanceMerge.swift; sourceTree = "<group>"; };
+		B10000000000000000000013 /* ContactMaintenanceVerification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMaintenanceVerification.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,7 +86,7 @@
 		};
 		F10000000000000000000004 /* App */ = {isa = PBXGroup; children = (B10000000000000000000001, B10000000000000000000002); path = App; sourceTree = "<group>"; };
 		F10000000000000000000005 /* Domain */ = {isa = PBXGroup; children = (B10000000000000000000003); path = Domain; sourceTree = "<group>"; };
-		F10000000000000000000006 /* Contacts */ = {isa = PBXGroup; children = (B10000000000000000000006, B1000000000000000000000F); path = Contacts; sourceTree = "<group>"; };
+		F10000000000000000000006 /* Contacts */ = {isa = PBXGroup; children = (B10000000000000000000006, B1000000000000000000000F, B10000000000000000000010, B10000000000000000000011, B10000000000000000000012, B10000000000000000000013); path = Contacts; sourceTree = "<group>"; };
 		F10000000000000000000007 /* Matching */ = {isa = PBXGroup; children = (B10000000000000000000004, B10000000000000000000005); path = Matching; sourceTree = "<group>"; };
 		F1000000000000000000000A /* Features */ = {isa = PBXGroup; children = (B10000000000000000000007, B10000000000000000000008, B10000000000000000000009, B1000000000000000000000A); path = Features; sourceTree = "<group>"; };
 		F10000000000000000000008 /* ContactCleanerTests */ = {isa = PBXGroup; children = (B1000000000000000000000C); path = ContactCleanerTests; sourceTree = "<group>"; };
@@ -144,7 +152,7 @@
 		C10000000000000000000001 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
-			files = (A10000000000000000000001, A10000000000000000000002, A10000000000000000000003, A10000000000000000000004, A10000000000000000000005, A10000000000000000000006, A1000000000000000000000C, A10000000000000000000007, A10000000000000000000008, A10000000000000000000009, A1000000000000000000000A);
+			files = (A10000000000000000000001, A10000000000000000000002, A10000000000000000000003, A10000000000000000000004, A10000000000000000000005, A10000000000000000000006, A1000000000000000000000C, A1000000000000000000000D, A1000000000000000000000E, A1000000000000000000000F, A10000000000000000000010, A10000000000000000000007, A10000000000000000000008, A10000000000000000000009, A1000000000000000000000A);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C10000000000000000000004 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A1000000000000000000000B); runOnlyForDeploymentPostprocessing = 0; };
