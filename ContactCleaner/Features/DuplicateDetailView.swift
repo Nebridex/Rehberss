@@ -20,6 +20,8 @@ struct DuplicateDetailView: View {
                 }
             }
 
+            maintenanceSection
+
             Section("Neden eşleşti?") {
                 ForEach(cluster.evidence) { item in
                     Label(item.detail, systemImage: item.kind == .birthdayConflict ? "exclamationmark.triangle" : "checkmark.circle")
@@ -48,7 +50,7 @@ struct DuplicateDetailView: View {
             }
 
             if let preview {
-                Section("Sonra — iCloud Master") {
+                Section("Sonra — Ana Rehber Master") {
                     LabeledContent("Ad", value: preview.displayName)
                     if !preview.organizationName.isEmpty { LabeledContent("Şirket", value: preview.organizationName) }
                     if !preview.departmentName.isEmpty { LabeledContent("Departman", value: preview.departmentName) }
@@ -84,9 +86,9 @@ struct DuplicateDetailView: View {
                     } label: {
                         Label("Bu Kayıtları Birleştir", systemImage: "person.2.badge.checkmark")
                     }
-                    .disabled(preview.requiresExplicitConflictConfirmation && !confirmScalarConflicts)
+                    .disabled(isWorking || (preview.requiresExplicitConflictConfirmation && !confirmScalarConflicts))
                     .confirmationDialog(
-                        "Bu kişiler tek iCloud kaydında birleştirilsin mi?",
+                        "Bu kişiler seçilen ana rehber kaydında birleştirilsin mi?",
                         isPresented: $showMergeConfirmation,
                         titleVisibility: .visible
                     ) {
@@ -100,12 +102,51 @@ struct DuplicateDetailView: View {
                 }
             } else {
                 Section {
-                    Label("iCloud master container bulunamadığı için merge kapalı.", systemImage: "icloud.slash")
+                    Label("Ana rehber seçilmediği için merge kapalı.", systemImage: "icloud.slash")
                 }
             }
         }
         .navigationTitle(cluster.title)
         .navigationBarTitleDisplayMode(.inline)
+        .onDisappear {
+            if case .working = viewModel.maintenanceState { return }
+        }
+    }
+
+    @ViewBuilder
+    private var maintenanceSection: some View {
+        switch viewModel.maintenanceState {
+        case .idle:
+            EmptyView()
+        case .working(let message):
+            Section("İşlem Durumu") {
+                HStack(spacing: 12) {
+                    ProgressView()
+                    Text(message)
+                }
+            }
+        case .success(let message):
+            Section("İşlem Sonucu") {
+                Label(message, systemImage: "checkmark.circle.fill")
+                    .foregroundStyle(.green)
+                Button("Yeniden Tara") { viewModel.scan() }
+                Button("Mesajı Kapat") { viewModel.clearMaintenanceState() }
+                    .foregroundStyle(.secondary)
+            }
+        case .failed(let message):
+            Section("İşlem Hatası") {
+                Label(message, systemImage: "xmark.octagon.fill")
+                    .foregroundStyle(.red)
+                    .textSelection(.enabled)
+                Button("Mesajı Kapat") { viewModel.clearMaintenanceState() }
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    private var isWorking: Bool {
+        if case .working = viewModel.maintenanceState { return true }
+        return false
     }
 
     private func formattedBirthday(_ value: DateComponents) -> String {
