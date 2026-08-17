@@ -192,7 +192,9 @@ extension ContactMaintenanceService {
                 success += 1
             } catch {
                 failed += 1
-                failures.append("\(cluster.title): \(error.localizedDescription)")
+                let nsError = error as NSError
+                let diagnostic = "\(error.localizedDescription) [\(nsError.domain) code=\(nsError.code)]"
+                failures.append("\(cluster.title): \(diagnostic)")
             }
         }
 
