@@ -21,6 +21,12 @@ struct LabeledString: Hashable, Codable, Identifiable {
     let value: String
 }
 
+struct ContactGroupSnapshot: Hashable, Codable, Identifiable {
+    let id: String
+    let name: String
+    let sourceIdentifier: String
+}
+
 struct PostalAddressSnapshot: Hashable, Codable, Identifiable {
     var id: String { "\(label)|\(street)|\(city)|\(state)|\(postalCode)|\(country)" }
     let label: String
@@ -89,7 +95,7 @@ struct ContactSnapshot: Identifiable, Hashable, Codable {
     let nonGregorianBirthday: DateComponents?
     let imageData: Data?
     let note: String?
-    let groupIdentifiers: [String]
+    let groups: [ContactGroupSnapshot]
 
     var hasImage: Bool { imageData != nil }
 
