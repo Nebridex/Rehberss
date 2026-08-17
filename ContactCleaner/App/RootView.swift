@@ -14,15 +14,12 @@ struct RootView: View {
                 case .scanning(let progress):
                     VStack(spacing: 18) {
                         ProgressView()
-                        Text("Rehber taranıyor…")
-                            .font(.headline)
-                        Text(progress)
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
+                        Text("Rehber taranıyor…").font(.headline)
+                        Text(progress).font(.footnote).foregroundStyle(.secondary)
                     }
                     .padding()
                 case .loaded(let report):
-                    HealthDashboardView(report: report, rescan: viewModel.scan)
+                    HealthDashboardView(report: report, viewModel: viewModel)
                 case .limited:
                     ContentUnavailableView(
                         "Tam Rehber Erişimi Gerekli",
@@ -37,16 +34,45 @@ struct RootView: View {
                     )
                 case .failed(let message):
                     ContentUnavailableView(
-                        "Tarama Başarısız",
+                        "İşlem Başarısız",
                         systemImage: "exclamationmark.triangle",
                         description: Text(message)
                     )
                 }
             }
             .navigationTitle("Rehber Temizleyici")
+            .safeAreaInset(edge: .bottom) {
+                maintenanceBanner
+            }
         }
-        .task {
-            await viewModel.refreshAuthorization()
+        .task { await viewModel.refreshAuthorization() }
+    }
+
+    @ViewBuilder
+    private var maintenanceBanner: some View {
+        switch viewModel.maintenanceState {
+        case .idle:
+            EmptyView()
+        case .working(let text):
+            HStack(spacing: 12) {
+                ProgressView()
+                Text(text).font(.footnote)
+                Spacer()
+            }
+            .padding()
+            .background(.ultraThinMaterial)
+        case .success(let text):
+            Label(text, systemImage: "checkmark.circle.fill")
+                .font(.footnote)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding()
+                .background(.ultraThinMaterial)
+        case .failed(let text):
+            Label(text, systemImage: "exclamationmark.triangle.fill")
+                .font(.footnote)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding()
+                .background(.ultraThinMaterial)
         }
     }
 
@@ -56,9 +82,9 @@ struct RootView: View {
                 .font(.system(size: 62))
 
             VStack(spacing: 8) {
-                Text("Rehberini Analiz Et")
+                Text("Rehberini Güvenle Temizle")
                     .font(.title2.bold())
-                Text("Bu ilk sürüm yalnızca okur. Hiçbir kişi oluşturmaz, değiştirmez veya silmez.")
+                Text("Önce tüm kaynakları tarar. Merge ve silme işlemlerinden önce cihazda yedek oluşturur ve sonucu doğrular.")
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.secondary)
             }
@@ -66,7 +92,7 @@ struct RootView: View {
             VStack(alignment: .leading, spacing: 10) {
                 Label("iCloud, Gmail, Exchange ve yerel kayıtları tara", systemImage: "checkmark.circle")
                 Label("Türkçe isim ve telefon formatlarını normalize et", systemImage: "checkmark.circle")
-                Label("Kesin, yüksek olasılıklı ve incelenmeli eşleşmeleri ayır", systemImage: "checkmark.circle")
+                Label("Merge öncesi sonucu göster, işlem geçmişinden geri al", systemImage: "checkmark.circle")
             }
             .font(.subheadline)
 
