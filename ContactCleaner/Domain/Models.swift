@@ -21,23 +21,77 @@ struct LabeledString: Hashable, Codable, Identifiable {
     let value: String
 }
 
+struct PostalAddressSnapshot: Hashable, Codable, Identifiable {
+    var id: String { "\(label)|\(street)|\(city)|\(state)|\(postalCode)|\(country)" }
+    let label: String
+    let street: String
+    let subLocality: String
+    let city: String
+    let subAdministrativeArea: String
+    let state: String
+    let postalCode: String
+    let country: String
+    let isoCountryCode: String
+}
+
+struct LabeledDateSnapshot: Hashable, Codable, Identifiable {
+    var id: String { "\(label)|\(dateKey)" }
+    let label: String
+    let components: DateComponents
+    var dateKey: String { "\(components.era ?? -1)|\(components.year ?? -1)|\(components.month ?? -1)|\(components.day ?? -1)" }
+}
+
+struct SocialProfileSnapshot: Hashable, Codable, Identifiable {
+    var id: String { "\(label)|\(service)|\(username)|\(urlString)" }
+    let label: String
+    let urlString: String
+    let username: String
+    let userIdentifier: String
+    let service: String
+}
+
+struct InstantMessageSnapshot: Hashable, Codable, Identifiable {
+    var id: String { "\(label)|\(service)|\(username)" }
+    let label: String
+    let username: String
+    let service: String
+}
+
 struct ContactSnapshot: Identifiable, Hashable, Codable {
     let id: String
     let source: ContactSource
 
+    let namePrefix: String
     let givenName: String
     let middleName: String
     let familyName: String
+    let previousFamilyName: String
+    let nameSuffix: String
     let nickname: String
+    let phoneticGivenName: String
+    let phoneticMiddleName: String
+    let phoneticFamilyName: String
+
     let organizationName: String
     let departmentName: String
     let jobTitle: String
 
     let phones: [LabeledString]
     let emails: [LabeledString]
+    let postalAddresses: [PostalAddressSnapshot]
+    let urlAddresses: [LabeledString]
+    let relations: [LabeledString]
+    let dates: [LabeledDateSnapshot]
+    let socialProfiles: [SocialProfileSnapshot]
+    let instantMessages: [InstantMessageSnapshot]
 
     let birthday: DateComponents?
-    let hasImage: Bool
+    let nonGregorianBirthday: DateComponents?
+    let imageData: Data?
+    let note: String?
+    let groupIdentifiers: [String]
+
+    var hasImage: Bool { imageData != nil }
 
     var displayName: String {
         let parts = [givenName, middleName, familyName].filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
@@ -94,9 +148,7 @@ struct PersonCluster: Identifiable, Hashable, Codable {
     let evidence: [MatchEvidence]
     let hasHardConflict: Bool
 
-    var title: String {
-        contacts.first?.displayName ?? "Eşleşme"
-    }
+    var title: String { contacts.first?.displayName ?? "Eşleşme" }
 }
 
 struct SourceCount: Identifiable, Hashable, Codable {
@@ -117,4 +169,6 @@ struct HealthReport: Codable {
     let samePhoneGroupCount: Int
     let sameEmailGroupCount: Int
     let unnamedCount: Int
+    let notesAccessAvailable: Bool
+    let preferredICloudContainerID: String?
 }
