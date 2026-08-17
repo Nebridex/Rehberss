@@ -107,10 +107,8 @@ final class HealthViewModel: ObservableObject {
 
     func bulkMergeDefinite() {
         guard !isBulkMerging else { return }
-        guard let report = currentReport, let containerID = selectedMasterContainerID else { maintenanceState = .failed("Önce Ana Rehber seç."); return }
-        let contacts = rawContacts
+        guard let containerID = selectedMasterContainerID else { maintenanceState = .failed("Önce Ana Rehber seç."); return }
         let override = allowWithoutNotesEntitlement
-        let clusters = report.definiteClusters
         let token = bulkCancellation
         token.reset()
         bulkFailureMessages = []
@@ -118,12 +116,43 @@ final class HealthViewModel: ObservableObject {
         bulkProgress = nil
 
         Task {
-            maintenanceState = .working("Toplu işlem öncesi tam rehber yedeği alınıyor")
             do {
-                let _: URL = try await runOffMain { [maintenance] in try maintenance.createFullBackup(from: contacts) }
+                maintenanceState = .working("Toplu işlem öncesi rehber yeniden doğrulanıyor")
+                let freshPayload = try await scanner.scan { [weak self] message in
+                    Task { @MainActor in self?.maintenanceState = .working("Ön kontrol — \(message)") }
+                }
+
+                let knownContainerIDs = Set(freshPayload.sources.map(\.id))
+                guard knownContainerIDs.contains(containerID) else {
+                    throw ContactMaintenanceService.MaintenanceError.iCloudContainerNotFound
+                }
+
+                if token.isCancelled() {
+                    isBulkMerging = false
+                    maintenanceState = .success("Toplu işlem başlamadan durduruldu.")
+                    return
+                }
+
+                let freshAnalysis = engine.analyze(freshPayload.rawContacts)
+                let freshDefinite = freshAnalysis.clusters.filter { $0.confidence == .definite }
+                let freshEligible = maintenance.eligibleDefiniteClusters(freshDefinite, preferredContainerID: containerID)
+                rawContacts = freshPayload.rawContacts
+
+                guard !freshEligible.isEmpty else {
+                    isBulkMerging = false
+                    bulkProgress = nil
+                    maintenanceState = .success("Taze taramada otomatik birleştirilebilecek güvenli duplicate kalmadı. Yeniden Tara ile ekranı güncelleyebilirsin.")
+                    scan()
+                    return
+                }
+
+                maintenanceState = .working("Taze tarama: \(freshEligible.count) güvenli grup. Tam rehber yedeği alınıyor")
+                let contactsForBackup = freshPayload.rawContacts
+                let _: URL = try await runOffMain { [maintenance] in try maintenance.createFullBackup(from: contactsForBackup) }
+
                 let summary: ContactMaintenanceService.BulkMergeSummary = await Task.detached(priority: .userInitiated) { [maintenance] in
                     maintenance.safeBulkMerge(
-                        clusters: clusters,
+                        clusters: freshEligible,
                         preferredContainerID: containerID,
                         allowWithoutNotesEntitlement: override,
                         shouldCancel: { token.isCancelled() },
@@ -149,10 +178,13 @@ final class HealthViewModel: ObservableObject {
                 } else {
                     maintenanceState = .success("Toplu işlem tamamlandı: \(summary.successCount)/\(summary.eligibleCount) güvenli grup birleştirildi, \(summary.failedCount) grup atlandı.")
                 }
+
+                scan()
             } catch {
                 isBulkMerging = false
                 bulkProgress = nil
-                maintenanceState = .failed(error.localizedDescription)
+                let nsError = error as NSError
+                maintenanceState = .failed("Toplu işlem başlatılamadı: \(error.localizedDescription) [\(nsError.domain) code=\(nsError.code)]")
             }
         }
     }
