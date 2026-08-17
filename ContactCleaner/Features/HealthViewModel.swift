@@ -121,11 +121,12 @@ final class HealthViewModel: ObservableObject {
 
     func createBackup() {
         guard !rawContacts.isEmpty else { return }
+        let contacts = rawContacts
         Task {
             maintenanceState = .working("Tam rehber yedeği oluşturuluyor")
             do {
-                let url = try await runOffMain { [rawContacts, maintenance] in
-                    try maintenance.createFullBackup(from: rawContacts)
+                let url: URL = try await runOffMain { [maintenance] in
+                    try maintenance.createFullBackup(from: contacts)
                 }
                 maintenanceState = .success("Yedek oluşturuldu: \(url.lastPathComponent)")
             } catch {
@@ -143,8 +144,8 @@ final class HealthViewModel: ObservableObject {
         Task {
             maintenanceState = .working("\(cluster.title) birleştiriliyor")
             do {
-                _ = try await runOffMain { [maintenance] in
-                    try maintenance.merge(
+                let _: Void = try await runOffMain { [maintenance] in
+                    _ = try maintenance.merge(
                         cluster: cluster,
                         preferredContainerID: containerID,
                         allowWithoutNotesEntitlement: override,
@@ -167,20 +168,26 @@ final class HealthViewModel: ObservableObject {
         }
         let contacts = rawContacts
         let override = allowWithoutNotesEntitlement
+        let clusters = report.definiteClusters
         Task {
             maintenanceState = .working("Toplu işlem öncesi tam yedek alınıyor")
             do {
-                _ = try await runOffMain { [maintenance] in try maintenance.createFullBackup(from: contacts) }
-                let results = try await runOffMain { [maintenance] in
-                    maintenance.safeBulkMerge(
-                        clusters: report.definiteClusters,
+                let _: URL = try await runOffMain { [maintenance] in try maintenance.createFullBackup(from: contacts) }
+                let counts: [Int] = try await runOffMain { [maintenance] in
+                    let results = maintenance.safeBulkMerge(
+                        clusters: clusters,
                         preferredContainerID: containerID,
                         allowWithoutNotesEntitlement: override,
                         progress: { _, _ in }
                     )
+                    let success = results.reduce(0) { partial, result in
+                        if case .success = result { return partial + 1 }
+                        return partial
+                    }
+                    return [success, results.count - success]
                 }
-                let successes = results.filter { if case .success = $0 { true } else { false } }.count
-                let failures = results.count - successes
+                let successes = counts.first ?? 0
+                let failures = counts.dropFirst().first ?? 0
                 maintenanceState = failures == 0
                     ? .success("\(successes) güvenli duplicate birleştirildi.")
                     : .success("\(successes) birleştirildi, \(failures) kayıt güvenlik nedeniyle atlandı.")
@@ -210,8 +217,8 @@ final class HealthViewModel: ObservableObject {
         Task {
             maintenanceState = .working("Konsolidasyon öncesi tam yedek alınıyor")
             do {
-                _ = try await runOffMain { [maintenance] in try maintenance.createFullBackup(from: contacts) }
-                let result = try await runOffMain { [maintenance] in
+                let _: URL = try await runOffMain { [maintenance] in try maintenance.createFullBackup(from: contacts) }
+                let counts: [Int] = try await runOffMain { [maintenance] in
                     var success = 0
                     var failed = 0
                     for snapshot in candidates {
@@ -225,11 +232,13 @@ final class HealthViewModel: ObservableObject {
                             failed += 1
                         }
                     }
-                    return (success, failed)
+                    return [success, failed]
                 }
-                maintenanceState = result.1 == 0
-                    ? .success("\(result.0) benzersiz kayıt iCloud'a taşındı ve kaynakları temizlendi.")
-                    : .success("\(result.0) kayıt iCloud'a taşındı; \(result.1) kayıt güvenlik nedeniyle yerinde bırakıldı.")
+                let success = counts.first ?? 0
+                let failed = counts.dropFirst().first ?? 0
+                maintenanceState = failed == 0
+                    ? .success("\(success) benzersiz kayıt iCloud'a taşındı ve kaynakları temizlendi.")
+                    : .success("\(success) kayıt iCloud'a taşındı; \(failed) kayıt güvenlik nedeniyle yerinde bırakıldı.")
                 scan()
             } catch {
                 maintenanceState = .failed(error.localizedDescription)
@@ -241,7 +250,9 @@ final class HealthViewModel: ObservableObject {
         Task {
             maintenanceState = .working("İşlem geri alınıyor")
             do {
-                try await runOffMain { [maintenance] in try maintenance.undo(operation) }
+                let _: Void = try await runOffMain { [maintenance] in
+                    try maintenance.undo(operation)
+                }
                 operationHistory = maintenance.operationHistory()
                 maintenanceState = .success("İşlem geri alındı.")
                 scan()
@@ -251,7 +262,7 @@ final class HealthViewModel: ObservableObject {
         }
     }
 
-    private func runOffMain<T>(_ work: @escaping @Sendable () throws -> T) async throws -> T {
+    private func runOffMain<T: Sendable>(_ work: @escaping @Sendable () throws -> T) async throws -> T {
         try await Task.detached(priority: .userInitiated, operation: work).value
     }
 }
