@@ -1,0 +1,235 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A10000000000000000000001 /* ContactCleanerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000001 /* ContactCleanerApp.swift */; };
+		A10000000000000000000002 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000002 /* RootView.swift */; };
+		A10000000000000000000003 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000003 /* Models.swift */; };
+		A10000000000000000000004 /* Normalizers.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000004 /* Normalizers.swift */; };
+		A10000000000000000000005 /* DuplicateEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000005 /* DuplicateEngine.swift */; };
+		A10000000000000000000006 /* ContactScanService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000006 /* ContactScanService.swift */; };
+		A10000000000000000000007 /* HealthViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000007 /* HealthViewModel.swift */; };
+		A10000000000000000000008 /* HealthDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000008 /* HealthDashboardView.swift */; };
+		A10000000000000000000009 /* DuplicateListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000009 /* DuplicateListView.swift */; };
+		A1000000000000000000000A /* DuplicateDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000000000A /* DuplicateDetailView.swift */; };
+		A1000000000000000000000B /* NormalizerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000000000000000000000C /* NormalizerTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		D10000000000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F10000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E10000000000000000000001;
+			remoteInfo = ContactCleaner;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		B10000000000000000000001 /* ContactCleanerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactCleanerApp.swift; sourceTree = "<group>"; };
+		B10000000000000000000002 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		B10000000000000000000003 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		B10000000000000000000004 /* Normalizers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Normalizers.swift; sourceTree = "<group>"; };
+		B10000000000000000000005 /* DuplicateEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplicateEngine.swift; sourceTree = "<group>"; };
+		B10000000000000000000006 /* ContactScanService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactScanService.swift; sourceTree = "<group>"; };
+		B10000000000000000000007 /* HealthViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthViewModel.swift; sourceTree = "<group>"; };
+		B10000000000000000000008 /* HealthDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDashboardView.swift; sourceTree = "<group>"; };
+		B10000000000000000000009 /* DuplicateListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplicateListView.swift; sourceTree = "<group>"; };
+		B1000000000000000000000A /* DuplicateDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuplicateDetailView.swift; sourceTree = "<group>"; };
+		B1000000000000000000000B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B1000000000000000000000C /* NormalizerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NormalizerTests.swift; sourceTree = "<group>"; };
+		B1000000000000000000000D /* ContactCleaner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ContactCleaner.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1000000000000000000000E /* ContactCleanerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ContactCleanerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		C10000000000000000000002 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		C10000000000000000000005 /* Frameworks */ = {isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F10000000000000000000002 = {
+			isa = PBXGroup;
+			children = (
+				F10000000000000000000003 /* ContactCleaner */,
+				F10000000000000000000008 /* ContactCleanerTests */,
+				F10000000000000000000009 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F10000000000000000000003 /* ContactCleaner */ = {
+			isa = PBXGroup;
+			children = (
+				F10000000000000000000004 /* App */,
+				F10000000000000000000005 /* Domain */,
+				F10000000000000000000006 /* Contacts */,
+				F10000000000000000000007 /* Matching */,
+				F1000000000000000000000A /* Features */,
+				B1000000000000000000000B /* Info.plist */,
+			);
+			path = ContactCleaner;
+			sourceTree = "<group>";
+		};
+		F10000000000000000000004 /* App */ = {isa = PBXGroup; children = (B10000000000000000000001, B10000000000000000000002); path = App; sourceTree = "<group>"; };
+		F10000000000000000000005 /* Domain */ = {isa = PBXGroup; children = (B10000000000000000000003); path = Domain; sourceTree = "<group>"; };
+		F10000000000000000000006 /* Contacts */ = {isa = PBXGroup; children = (B10000000000000000000006); path = Contacts; sourceTree = "<group>"; };
+		F10000000000000000000007 /* Matching */ = {isa = PBXGroup; children = (B10000000000000000000004, B10000000000000000000005); path = Matching; sourceTree = "<group>"; };
+		F1000000000000000000000A /* Features */ = {isa = PBXGroup; children = (B10000000000000000000007, B10000000000000000000008, B10000000000000000000009, B1000000000000000000000A); path = Features; sourceTree = "<group>"; };
+		F10000000000000000000008 /* ContactCleanerTests */ = {isa = PBXGroup; children = (B1000000000000000000000C); path = ContactCleanerTests; sourceTree = "<group>"; };
+		F10000000000000000000009 /* Products */ = {isa = PBXGroup; children = (B1000000000000000000000D, B1000000000000000000000E); name = Products; sourceTree = "<group>"; };
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E10000000000000000000001 /* ContactCleaner */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1000000000000000000000D /* Build configuration list for PBXNativeTarget "ContactCleaner" */;
+			buildPhases = (C10000000000000000000001 /* Sources */, C10000000000000000000002 /* Frameworks */, C10000000000000000000003 /* Resources */);
+			buildRules = ();
+			dependencies = ();
+			name = ContactCleaner;
+			productName = ContactCleaner;
+			productReference = B1000000000000000000000D /* ContactCleaner.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E10000000000000000000002 /* ContactCleanerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1000000000000000000000E /* Build configuration list for PBXNativeTarget "ContactCleanerTests" */;
+			buildPhases = (C10000000000000000000004 /* Sources */, C10000000000000000000005 /* Frameworks */, C10000000000000000000006 /* Resources */);
+			buildRules = ();
+			dependencies = (D10000000000000000000002 /* PBXTargetDependency */);
+			name = ContactCleanerTests;
+			productName = ContactCleanerTests;
+			productReference = B1000000000000000000000E /* ContactCleanerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F10000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					E10000000000000000000001 = {CreatedOnToolsVersion = 16.0;};
+					E10000000000000000000002 = {CreatedOnToolsVersion = 16.0; TestTargetID = E10000000000000000000001;};
+				};
+			};
+			buildConfigurationList = F1000000000000000000000C /* Build configuration list for PBXProject "ContactCleaner" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = tr;
+			hasScannedForEncodings = 0;
+			knownRegions = (Base, tr, en);
+			mainGroup = F10000000000000000000002;
+			productRefGroup = F10000000000000000000009 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (E10000000000000000000001, E10000000000000000000002);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C10000000000000000000003 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		C10000000000000000000006 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C10000000000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (A10000000000000000000001, A10000000000000000000002, A10000000000000000000003, A10000000000000000000004, A10000000000000000000005, A10000000000000000000006, A10000000000000000000007, A10000000000000000000008, A10000000000000000000009, A1000000000000000000000A);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C10000000000000000000004 /* Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A1000000000000000000000B); runOnlyForDeploymentPostprocessing = 0; };
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		D10000000000000000000002 /* PBXTargetDependency */ = {isa = PBXTargetDependency; target = E10000000000000000000001 /* ContactCleaner */; targetProxy = D10000000000000000000001 /* PBXContainerItemProxy */; };
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		F10000000000000000000010 /* Debug project */ = {isa = XCBuildConfiguration; buildSettings = {CLANG_ENABLE_MODULES = YES; SWIFT_VERSION = 5.0;}; name = Debug;};
+		F10000000000000000000011 /* Release project */ = {isa = XCBuildConfiguration; buildSettings = {CLANG_ENABLE_MODULES = YES; SWIFT_COMPILATION_MODE = wholemodule; SWIFT_VERSION = 5.0;}; name = Release;};
+		F10000000000000000000012 /* Debug app */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ContactCleaner/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cihatoz.ContactCleaner;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		F10000000000000000000013 /* Release app */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ContactCleaner/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cihatoz.ContactCleaner;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		F10000000000000000000014 /* Debug tests */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cihatoz.ContactCleanerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ContactCleaner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ContactCleaner";
+			};
+			name = Debug;
+		};
+		F10000000000000000000015 /* Release tests */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cihatoz.ContactCleanerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ContactCleaner.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ContactCleaner";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F1000000000000000000000C /* Build configuration list for PBXProject "ContactCleaner" */ = {isa = XCConfigurationList; buildConfigurations = (F10000000000000000000010, F10000000000000000000011); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release;};
+		F1000000000000000000000D /* Build configuration list for PBXNativeTarget "ContactCleaner" */ = {isa = XCConfigurationList; buildConfigurations = (F10000000000000000000012, F10000000000000000000013); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release;};
+		F1000000000000000000000E /* Build configuration list for PBXNativeTarget "ContactCleanerTests" */ = {isa = XCConfigurationList; buildConfigurations = (F10000000000000000000014, F10000000000000000000015); defaultConfigurationIsVisible = 0; defaultConfigurationName = Release;};
+/* End XCConfigurationList section */
+	};
+	rootObject = F10000000000000000000001 /* Project object */;
+}
