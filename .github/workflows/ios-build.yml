@@ -1,0 +1,33 @@
+name: iOS Compile Check
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'ContactCleaner/**'
+      - 'ContactCleanerTests/**'
+      - 'ContactCleaner.xcodeproj/**'
+
+concurrency:
+  group: ios-compile-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show Xcode version
+        run: xcodebuild -version
+      - name: Compile app for iOS Simulator
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project ContactCleaner.xcodeproj \
+            -target ContactCleaner \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            CODE_SIGNING_ALLOWED=NO \
+            build | xcpretty
