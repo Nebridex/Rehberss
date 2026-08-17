@@ -22,6 +22,7 @@
 		A1000000000000000000000E /* ContactMaintenanceFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000011 /* ContactMaintenanceFields.swift */; };
 		A1000000000000000000000F /* ContactMaintenanceMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000012 /* ContactMaintenanceMerge.swift */; };
 		A10000000000000000000010 /* ContactMaintenanceVerification.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000013 /* ContactMaintenanceVerification.swift */; };
+		A10000000000000000000011 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000014 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,7 @@
 		B10000000000000000000011 /* ContactMaintenanceFields.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMaintenanceFields.swift; sourceTree = "<group>"; };
 		B10000000000000000000012 /* ContactMaintenanceMerge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMaintenanceMerge.swift; sourceTree = "<group>"; };
 		B10000000000000000000013 /* ContactMaintenanceVerification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMaintenanceVerification.swift; sourceTree = "<group>"; };
+		B10000000000000000000014 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 				F10000000000000000000006 /* Contacts */,
 				F10000000000000000000007 /* Matching */,
 				F1000000000000000000000A /* Features */,
+				B10000000000000000000014 /* Assets.xcassets */,
 				B1000000000000000000000B /* Info.plist */,
 			);
 			path = ContactCleaner;
@@ -144,7 +147,7 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		C10000000000000000000003 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
+		C10000000000000000000003 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000011 /* Assets.xcassets in Resources */); runOnlyForDeploymentPostprocessing = 0; };
 		C10000000000000000000006 /* Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXResourcesBuildPhase section */
 
@@ -168,6 +171,7 @@
 		F10000000000000000000012 /* Debug app */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -188,6 +192,7 @@
 		F10000000000000000000013 /* Release app */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = NO;
